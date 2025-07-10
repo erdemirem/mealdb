@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0" />
+  <title>YumMyRecipes</title>
+
+  <style>
+    body {
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #fff0bd;
+      margin: 0;
+      padding: 0 40px;
+      color: #4a4c1a;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      margin: 50px 10px 90px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      color: #cc5c00;
+      text-shadow: 1px 1px 2px #f3c623;
+    }
+
+    .arama-alani {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 40px;
+      justify-content: center;
+    }
+
+    .tarif-sonuclari {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .tarif {
+      background-color: #f7d1cc;
+      border: 2px solid #f3c623;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      max-width: 500px;
+      text-align: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .tarif:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+
+    .tarif img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .tarif h2 {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #cc5c00;
+    }
+
+    .tarif p {
+      font-size: 14px;
+      color: #1f1f1f;
+      margin: 15px 0 0;
+    }
+
+    #arama {
+      background-color: #f3c623;
+      color: #cc5c00;
+      border: #f3c623;
+      padding: 10px 20px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #arama:hover {
+      background-color: #f7d1cc;
+      transform: scale(1.05);
+    }
+
+    #arama:active {
+      transform: scale(0.98);
+    }
+
+    #yemek-adi {
+      padding: 10px 15px;
+      font-size: 15px;
+      border: 2px solid #f3c623;
+      border-radius: 8px;
+      width: 250px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      background-color: #fffbe6;
+    }
+
+    #yemek-adi:focus {
+      border-color: #ffa500;
+      box-shadow: 0 0 5px #ffa50099;
+    }
+
+    .tarif-ve-malzeme {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .malzeme-kutu {
+      background-color: #c7db9c;
+      border: 2px solid #f3c623;
+      border-radius: 10px;
+      padding: 15px;
+      max-width: 250px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      color: #cc5c00;
+      font-size: 15px;
+    }
+
+    .malzeme-listesi {
+      list-style-type: disc;
+      padding-left: 20px;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+    }
+
+    .icerik {
+      flex: 1;
+    }
+
+    #tarif-oneri {
+      padding: 15px;
+      max-width: 500px;
+      text-align: center;
+      font-size: 18px;
+
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      padding-top: 80px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-icerik {
+      background-color: #fffbe6;
+      margin: auto;
+      padding: 20px;
+      border: 2px solid #f3c623;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 800px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      position: relative;
+      max-height: 80vh;
+      overflow: auto;
+    }
+
+    .kapat {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #cc5c00;
+      cursor: pointer;
+    }
+
+    .kategori-alani {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .kategori-alani ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .kategori-alani li {
+      background-color: #fffbe6;
+      border: 2px solid #f3c623;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #cc5c00;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .kategori-alani li:hover {
+      background-color: #f7d1cc;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>YumMy Recipes 𓌉◯𓇋</h1>
+
+  <div class="arama-alani">
+    <input type="text" id="yemek-adi" placeholder="🍜Enter a meal name" />
+    <button id="arama">SEARCH</button>
+  </div>
+
+  <div class="kategori-alani">
+    <ul id="kategori-listesi"></ul>
+  </div>
+
+
+  <div id="modal" class="modal">
+    <div class="modal-icerik">
+      <span class="kapat">&times;</span>
+      <div id="modal-icerik-alani"></div>
+    </div>
+  </div>
+
+
+  <div class="tarif-sonuclari"></div>
+
+
+  <div id="tarif-oneri" style="margin: 30px auto; max-width: 1000px;">
+    <h2 style="color: #cc5c00; text-align: center; text-shadow: 1px 1px 2px #f3c623;">‧₊˚ ⋅ Recipe of the Moment ‧₊˚ ⋅
+    </h2>
+    <div id="tarif-oneri-icerik" class="tarif-ve-malzeme" style="justify-content: center;"></div>
+    <div style="text-align: center; margin-top: 10px;">
+      <button id="yeni-tarif-btn" style="
+      background-color: #cc5c00;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;">Surprise Me</button>
+    </div>
+
+    <script>
+
+      function rastgeleTarifGetir() {
+        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
+          .then((res) => res.json())
+          .then((data) => {
+            const yemek = data.meals[0];
+
+            let malzemeler = "";
+            for (let i = 1; i <= 20; i++) {
+              const isim = yemek[`strIngredient${i}`];
+              const olcu = yemek[`strMeasure${i}`];
+              if (isim && isim.trim() !== "") {
+                malzemeler += `<li>${olcu} ${isim}</li>`;
+              }
+            }
+
+            const html = `
+        <div class="tarif">
+          <h2>${yemek.strMeal}</h2>
+          <img src="${yemek.strMealThumb}" alt="${yemek.strMeal}" />
+          <p>${yemek.strInstructions}</p>
+        </div>
+        <div class="malzeme-kutu">
+          <h3>Ingredients:</h3>
+          <ul class="malzeme-listesi">${malzemeler}</ul>
+        </div>
+      `;
+
+            document.getElementById("tarif-oneri-icerik").innerHTML = html;
+          })
+          .catch(() => {
+            document.getElementById("tarif-oneri-icerik").innerHTML =
+              "<p>Tarif yüklenemedi.</p>";
+          });
+
+      }
+
+      const buton = document.getElementById("arama");
+      const aramaKutusu = document.getElementById("yemek-adi");
+
+      buton.addEventListener("click", function () {
+        const yemekAdi = aramaKutusu.value;
+        console.log("Aranan Yemek: ", yemekAdi);
+
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${yemekAdi}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const tarifler = data.meals;
+            const sonucAlani = document.querySelector(".tarif-sonuclari");
+            sonucAlani.innerHTML = "";
+
+            if (!tarifler) {
+              sonucAlani.innerHTML = "<p>No meals found.</p>";
+              return;
+            }
+
+            let toplamHTML = "";
+
+            tarifler.forEach((yemek) => {
+              let malzemeler = "";
+              for (let i = 1; i <= 20; i++) {
+                const isim = yemek[`strIngredient${i}`];
+                const olcu = yemek[`strMeasure${i}`];
+                if (isim && isim.trim() !== "") {
+                  malzemeler += `<li>${olcu} ${isim}</li>`;
+                }
+              }
+
+              toplamHTML += `
+          <div class="tarif-ve-malzeme">
+            <div class="tarif">
+              <h2>${yemek.strMeal}</h2>
+              <img src="${yemek.strMealThumb}" alt="${yemek.strMeal}" width="200">
+              <p>${yemek.strInstructions}...</p>
+            </div>
+            <div class="malzeme-kutu">
+              <h3>Ingredients:</h3>
+              <ul class="malzeme-listesi">${malzemeler}</ul>
+            </div>
+          </div>
+        `;
+            });
+
+            sonucAlani.innerHTML = toplamHTML;
+            sonucAlani.scrollIntoView({ behavior: "smooth" });
+          });
+      });
+
+      fetch("https://www.themealdb.com/api/json/v1/1/categories.php")
+        .then((res) => res.json())
+        .then((data) => {
+          const kategoriListesi = document.getElementById("kategori-listesi");
+
+          data.categories.forEach((kategori) => {
+            const li = document.createElement("li");
+            li.textContent = kategori.strCategory;
+
+            li.addEventListener("click", () => {
+              fetch(
+                `https://www.themealdb.com/api/json/v1/1/filter.php?c=${kategori.strCategory}`
+              )
+                .then((res) => res.json())
+                .then((data) => {
+                  const sonucAlani = document.querySelector(".tarif-sonuclari");
+                  sonucAlani.innerHTML = "";
+
+                  data.meals.forEach((yemek) => {
+                    const yemekHTML = `
+                  <div class="tarif" data-id="${yemek.idMeal}">
+                    <img src="${yemek.strMealThumb}" alt="${yemek.strMeal}" />
+                    <h2>${yemek.strMeal}</h2>
+                  </div>
+                `;
+                    sonucAlani.innerHTML += yemekHTML;
+                  });
+
+                  document.querySelectorAll(".tarif").forEach((div) => {
+                    div.addEventListener("click", () => {
+                      const mealId = div.getAttribute("data-id");
+                      fetch(
+                        `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`
+                      )
+                        .then((res) => res.json())
+                        .then((veri) => {
+                          const yemek = veri.meals[0];
+                          let malzemeler = "";
+                          for (let i = 1; i <= 20; i++) {
+                            const isim = yemek[`strIngredient${i}`];
+                            const olcu = yemek[`strMeasure${i}`];
+                            if (isim && isim.trim() !== "") {
+                              malzemeler += `<li>${olcu} ${isim}</li>`;
+                            }
+                          }
+
+                          const modalIcerik = `
+                            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                              <div style="flex: 1; min-width: 250px;">
+                              <h2 style="color:#cc5c00; text-align:center;">${yemek.strMeal}</h2>
+                              <img src="${yemek.strMealThumb}" alt="${yemek.strMeal}" style="width:100%; border-radius:10px; margin: 15px 0;" />
+                              </div>
+                                <div style="flex: 2; min-width: 300px;">
+                                <h3 style="color:#cc5c00;">Ingredients</h3>
+                                <ul class="malzeme-listesi">${malzemeler}</ul>
+                                <h3 style="margin-top:20px; color:#cc5c00;">Instructions</h3>
+                                <p style="text-align: justify;">${yemek.strInstructions}</p>
+                                </div>
+                            </div>
+                        `;
+
+                          document.getElementById(
+                            "modal-icerik-alani"
+                          ).innerHTML = modalIcerik;
+                          document.getElementById("modal").style.display =
+                            "block";
+                        });
+                    });
+                  });
+                });
+            });
+
+            kategoriListesi.appendChild(li);
+          });
+        });
+
+      window.addEventListener("click", (event) => {
+        const modal = document.getElementById("modal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      document.querySelector(".kapat").addEventListener("click", () => {
+        document.getElementById("modal").style.display = "none";
+      });
+
+      document.getElementById("yeni-tarif-btn").addEventListener("click", rastgeleTarifGetir);
+      window.addEventListener("DOMContentLoaded", rastgeleTarifGetir);
+    </script>
+</body>
+
+</html>
